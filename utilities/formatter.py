@@ -67,7 +67,7 @@ class Decorators:
 
 class Style:
     HEADER = Colors.Bright_White + Decorators.Bold + BackgroundColors.Bright_Green
-    TITLE = Colors.Bright_White + Decorators.Underline
+    TITLE = Colors.Bright_White + Decorators.Reversed
     KEYWORD = Colors.Bright_Red + Decorators.Bold
     RESET = '\u001b[0m'
 
