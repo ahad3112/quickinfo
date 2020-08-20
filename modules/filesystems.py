@@ -12,10 +12,10 @@
 
 import os
 
-from utilities.colors import Colors
-from utilities.formatting import justify
+# from utilities.colors import Colors
+from utilities.formatter import justify, Style
 
-__line_width = 120
+__line_width = 150
 __username = os.popen('whoami').read().strip()
 
 __file_systems = {
@@ -30,11 +30,11 @@ __file_systems = {
              ' location-transparent file name space to all the client workstations.'),
             __line_width
         ),
-        'info_format': ('{3.HEADER}{0:{1}}\n{2[name]:^{1}}\n{0:{1}}'
-                        '\n{3.Reset}{2[quickinfo]:<{1}}\n'
-                        '\n{3.Red}LOCATION : {3.Reset}{2[location]:<{1}}'
-                        '\n{3.Red}HOME     : {3.Reset}{2[home]:<{1}}'
-                        '\n{3.Red}WEB      : {3.Reset}{2[web]:<{1}}\n')
+        'info_format': ('{0:=<{1}}\n{3.HEADER}{2[name]:^{1}}{3.RESET}\n{0:=<{1}}'
+                        '\n{3.RESET}{2[quickinfo]:<{1}}\n'
+                        '\n{3.KEYWORD}LOCATION : {3.RESET}{2[location]:<{1}}'
+                        '\n{3.KEYWORD}HOME     : {3.RESET}{2[home]:<{1}}'
+                        '\n{3.KEYWORD}WEB      : {3.RESET}{2[web]:<{1}}\n')
     },
     'lustre': {
         'name': ' '.join('LUSTRE'),
@@ -48,13 +48,13 @@ __file_systems = {
              ' optimized for handling data from many clients at the same time.'),
             __line_width
         ),
-        'info_format': ('{3.HEADER}{0:{1}}\n{2[name]:^{1}}\n{0:{1}}'
-                        '\n{3.Reset}{2[quickinfo]:<{1}}\n'
-                        '\n{3.Red}LOCATION : {3.Reset}{2[location]:<{1}}'
-                        '\n{3.Red}HOME     : {3.Reset}{2[home]:<{1}}'
-                        '\n{3.Red}NOBACKUP : {3.Reset}{2[nobackup]:<{1}}'
-                        '\n{3.Red}SCRATCH  : {3.Reset}{2[scratch]:<{1}}'
-                        '\n{3.Red}WEB      : {3.Reset}{2[web]:<{1}}\n')
+        'info_format': ('{0:=<{1}}\n{3.HEADER}{2[name]:^{1}}{3.RESET}\n{0:=<{1}}'
+                        '\n{3.RESET}{2[quickinfo]:<{1}}\n'
+                        '\n{3.KEYWORD}LOCATION : {3.RESET}{2[location]:<{1}}'
+                        '\n{3.KEYWORD}HOME     : {3.RESET}{2[home]:<{1}}'
+                        '\n{3.KEYWORD}NOBACKUP : {3.RESET}{2[nobackup]:<{1}}'
+                        '\n{3.KEYWORD}SCRATCH  : {3.RESET}{2[scratch]:<{1}}'
+                        '\n{3.KEYWORD}WEB      : {3.RESET}{2[web]:<{1}}\n')
     }
 }
 
@@ -65,9 +65,9 @@ def handler(args):
         filesystem = __file_systems.get(filesystem, 'None')
         if filesystem:
             print(filesystem.get('info_format', 'Not Available').format(
-                '=' * __line_width,
-                __line_width - 11,
-                filesystem, Colors
+                '=',
+                __line_width,
+                filesystem, Style
             ))
 
 
