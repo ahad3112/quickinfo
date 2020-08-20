@@ -65,7 +65,7 @@ def handler(args):
         filesystem = __file_systems.get(filesystem, 'None')
         if filesystem:
             print(filesystem.get('info_format', 'Not Available').format(
-                '-' * __line_width,
+                '=' * __line_width,
                 __line_width - 11,
                 filesystem, Colors
             ))
