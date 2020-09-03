@@ -80,7 +80,7 @@ def handler(args):
 def add_filesystems_cli(subparsers):
     fs_parser = subparsers.add_parser(
         'fs',
-        help=r'Some usefule information on "filesystem" at PDC',
+        help=r'Some useful quick information on "filesystem" at PDC',
         description=r'This submodule provides usefull information on "PDC" filesystem',
     )
 

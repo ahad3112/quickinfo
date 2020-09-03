@@ -42,8 +42,8 @@ if __name__ == '__main__':
     add_filesystems_cli(subparsers)
     add_snic_cli(subparsers)
     add_jobsubmit_cli(subparsers)
-    add_softwares_cli(subparsers)
-    add_clusters_cli(subparsers)
+    # add_softwares_cli(subparsers)
+    # add_clusters_cli(subparsers)
 
     args = parser.parse_args()
 
