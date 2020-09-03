@@ -10,12 +10,11 @@
     Description:
         Write some documentation about common specific questions on that cluster.
         Examples:
-            * where the filesystems are and how to reach
-            * it SNIC variables
-            * submit how to
+            * where the filesystems are and how to reach : done
+            * it SNIC variables : Done
+            * submit how to : SLURM example ... Doing
             * Link to support documentation etc...
             * compiler settings
-            * SLURM example
             *
 '''
 
