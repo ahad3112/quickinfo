@@ -14,7 +14,7 @@
 from utilities.formatter import justify, create_table, Colors, Style
 
 
-__line_width = 150
+__line_width = 40
 
 __snic_variables = {
     'name': ' '.join('SNIC'),
@@ -23,7 +23,7 @@ __snic_variables = {
             ' SNIC has provided a number of specific variables'
             ' which indicate in which folders data should be stored.'
             ' On "Beskow" the module "snic_env" is loaded by default but'
-            ' in order to access these variables on "Tegner", a module must be loaded'),
+            ' in order to access these variables on "Tegner", a module must be loaded.'),
         __line_width
     ),
     'var_list_title': 'SNIC Variables:',
@@ -48,7 +48,7 @@ __snic_variables = {
                     '\n\t{3.KEYWORD}SNIC_RESOURCE : {3.RESET}{5[SNIC_RESOURCE]:<{1}}'
                     '\n\t{3.KEYWORD}SNIC_SITE     : {3.RESET}{5[SNIC_SITE]:<{1}}'
                     '\n\t{3.KEYWORD}SNIC_TMP      : {3.RESET}{5[SNIC_TMP]:<{1}}\n'
-                    # '\n{6}'
+                    '\n{6}'
                     '\n{3.TITLE}{2[var_value_title]}{3.RESET}'
                     '\n\t{2[echo_var]}\n'
                     )
