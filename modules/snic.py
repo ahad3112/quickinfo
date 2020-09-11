@@ -14,7 +14,7 @@
 from utilities.formatter import justify, create_table, Colors, Style
 
 
-__line_width = 40
+__line_width = 60
 
 __snic_variables = {
     'name': ' '.join('SNIC'),
@@ -65,14 +65,16 @@ def handler(args):
         __snic_variables.get('variables', {}),
         create_table(
             title='SNIC Environment Variables',
-            headers=[{'name': 'Name'}, {'name': 'Function'}],
+            headers=['Name', 'Function'],
             rows=list(__snic_variables.get('variables', {}).items()),
             line_width=__line_width
         )
     ))
 
     # testing table creation
-    # print(create_table('SNIC Environment Variables', [], []))
+    # print(create_table('SNIC Environment Variables',
+    #                    headers=[{'name': 'Name'}, {'name': 'Function'}],
+    #                    rows=list(__snic_variables.get('variables', {}).items()), line_width=__line_width))
 
 
 def add_snic_cli(subparsers):

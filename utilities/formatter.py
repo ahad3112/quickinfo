@@ -79,19 +79,23 @@ def justify(text, line_width, indent=0, left_separator='', right_separator=''):
     This function is responsible to justify alignment based on the line width
     '''
     # line_width = line_width - indent
+    # print('line_width', line_width)
     result = []
     text = text.strip()
     while text:
         try:
             if not text[line_width - 1].isspace() and not text[line_width].isspace():
-                result.append('\r' + ' ' * indent + left_separator + text[:line_width - 1] + '-' + right_separator + '\n')
-                text = text[line_width - 1:]
+                # TODO: will deal with addind '-'' later
+                # result.append('\r' + ' ' * indent + left_separator + text[:line_width - 1] + '-' + right_separator + '\n')
+                # text = text[line_width - 1:]
+                result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
+                text = text[line_width:]
             else:
-                result.append('\r' + ' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
+                result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
                 text = text[line_width:]
         except IndexError:
             rest_text = text[:]
-            result.append('\r' + ' ' * indent + left_separator + rest_text + ' ' * (line_width - len(rest_text)) + right_separator)
+            result.append(' ' * indent + left_separator + rest_text + ' ' * (line_width - len(rest_text)) + right_separator)
             text = ''
 
         text = text.lstrip()
@@ -99,161 +103,51 @@ def justify(text, line_width, indent=0, left_separator='', right_separator=''):
     return ''.join(result)
 
 
-def justify_backup(text, line_width, indent=0):
+# Below is a test function for creating column entry, row and table
+def create_entry():
     '''
-    This function is responsible to justify alignment based on the line width
+    Don't think we need this
     '''
-    line_width = line_width - indent
-    result = []
-    text = text.strip()
-    while text:
-        try:
-            if not text[line_width - 1].isspace() and not text[line_width].isspace():
-                result.append(' ' * indent + text[:line_width - 1] + '-\n')
-                text = text[line_width - 1:]
+    pass
+
+
+def create_row(data, line_width, header=False):
+    # we need place for cloumn separator and padding
+    n_columns = len(data)
+    total_columns_width = line_width - len(data) * 3 - 1
+    columns_width = [
+        (total_columns_width + n_columns - i - 1) // n_columns for i in range(n_columns)
+    ]
+    lines_in_row = max(
+        [math.ceil(len(data[i]) / columns_width[i]) for i in range(n_columns)]
+    )
+
+    row = [' ' * (line_width - 2) + ' |\n'] * lines_in_row
+    offset = 0
+
+    for (index, col) in enumerate(data):
+        justified_lines = justify(col, columns_width[index]).split('\n')
+
+        assert lines_in_row >= len(justified_lines), 'Error in defining lines in a row'
+
+        for i in range(lines_in_row):
+            if i < len(justified_lines):
+                row[i] = row[i][:offset] + '| ' + justified_lines[i] + ' ' + row[i][offset + len(justified_lines[i]) + 3:]
             else:
-                result.append(' ' * indent + text[:line_width] + '\n')
-                text = text[line_width:]
-        except IndexError:
-            result.append(' ' * indent + text[:])
-            text = ''
+                row[i] = row[i][:offset] + '| ' + row[i][offset + 2:]
 
-        text = text.lstrip()
+        offset += columns_width[index] + 3
 
-    return ''.join(result)
+    return ''.join(row)
 
 
-# Below is a test function for creating tables
 def create_table(title, headers, rows, line_width=150, row_separator='-', column_separator='|'):
-    # mock data for debugging
-    # headers = [
-    #     {'name': 'header1', 'percentage': 33},
-    #     {'name': 'header2', 'percentage': 33},
-    #     {'name': 'header3', 'percentage': 33},
-    # ]
-    # print(rows)
-    # rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
-
-    # create title
-    title_length = len(title.strip())
-    title_lr = f'{column_separator}'
-    title_up = '+' + f'{row_separator}' * (title_length + 2) + '+' + '\n'
-    formatted_title = title_up + title_lr + ' ' + Style.HEADER + title + Style.RESET + ' ' + title_lr
-
-    # update line_width in case title is longer than the line_width
-    if line_width < (title_length + 4):
-        line_width = title_length + 4
-
-    row_separator = '\n+' + f'{row_separator}' * (line_width - 2) + '+' + '\n'
-    intermediate_row_separator = row_separator[:]
-
-    # column width and column separator
-    col_width = (line_width - len(headers) - 1) // len(headers)
-    header_format = '{0[name]:^{1}}'
-    formatted_headers = f'\r{column_separator}'
-
-    for (index, header) in enumerate(headers):
-        if index == len(headers) - 1:
-            col_width = line_width - len(headers) - 1 - index * col_width
-        if index > 0:
-            intermediate_row_separator = intermediate_row_separator[:col_width + 1] + '+' + intermediate_row_separator[col_width + 2:]
-        formatted_headers += Style.HEADER + header_format.format(header, col_width) + Style.RESET + f'{column_separator}'
-
-    # adding rows
-    formatted_rows = ''
-    entry_format = '{0:<{1}}'
+    table = ''
+    row_separator = '+' + f'{row_separator}' * (line_width - 2) + '+'
+    table += row_separator
+    table += '\n' + create_row(headers, line_width).strip() + '\n' + row_separator
     for row in rows:
-        occupied_line_width = 0
-        entry_width = (line_width - len(headers) - 1) // len(headers)
-        prev_entry_width = entry_width
-        formatted_row = f'\r'
-        left_separator = f'{column_separator}'
-        right_separator = f'{column_separator}'
+        assert len(headers) == len(row), "Number of header and number of column in a row should be same."
+        table += '\n' + create_row(row, line_width).strip() + '\n' + row_separator
 
-        max_lines = max([math.ceil(len(col) / entry_width) for col in row])
-
-        print('Maxlines: '.upper(), max_lines)
-
-        for (index, entry) in enumerate(row):
-            if index == len(headers) - 1:
-                entry_width = line_width - len(headers) - 1 - index * entry_width
-            # formatted_row += Colors.Bright_White + Decorators.Bold + BackgroundColors.Bright_Blue + entry_format.format(entry, entry_width) + Style.RESET + f'{column_separator}'
-
-            if index > 0:
-                left_separator = ''
-
-            justified_entry = justify(entry, entry_width, indent=occupied_line_width,
-                                      right_separator=right_separator, left_separator=left_separator)
-
-            occupied_line_width += entry_width + len(column_separator) * 2
-            formatted_row = Decorators.Bold + justified_entry + Style.RESET + formatted_row
-
-        formatted_rows += formatted_row + intermediate_row_separator
-
-    return formatted_title + row_separator + formatted_headers + intermediate_row_separator + formatted_rows
-
-
-# Below is a test function for creating tables
-def create_table_backup(title, headers, rows, line_width=150, row_separator='-', column_separator='|'):
-    # mock data for debugging
-    # headers = [
-    #     {'name': 'header1', 'percentage': 33},
-    #     {'name': 'header2', 'percentage': 33},
-    #     {'name': 'header3', 'percentage': 33},
-    # ]
-    # print(rows)
-    # rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
-
-    # create title
-    title_length = len(title.strip())
-    title_lr = f'{column_separator}'
-    title_up = '+' + f'{row_separator}' * (title_length + 2) + '+' + '\n'
-    formatted_title = title_up + title_lr + ' ' + Style.HEADER + title + Style.RESET + ' ' + title_lr
-
-    # update line_width in case title is longer than the line_width
-    if line_width < title_length:
-        line_width = title_length
-
-    row_separator = '\n+' + f'{row_separator}' * (line_width - 2) + '+' + '\n'
-    intermediate_row_separator = row_separator[:]
-
-    # column width and column separator
-    col_width = (line_width - len(headers) - 1) // len(headers)
-    header_format = '{0[name]:^{1}}'
-    formatted_headers = f'\r{column_separator}'
-
-    for (index, header) in enumerate(headers):
-        if index == len(headers) - 1:
-            col_width = line_width - len(headers) - 1 - index * col_width
-        if index > 0:
-            intermediate_row_separator = intermediate_row_separator[:col_width + 1] + '+' + intermediate_row_separator[col_width + 2:]
-        formatted_headers += Style.HEADER + header_format.format(header, col_width) + Style.RESET + f'{column_separator}'
-
-    # adding rows
-    formatted_rows = ''
-    entry_format = '{0:<{1}}'
-    for row in rows:
-        occupied_line_width = 0
-        entry_width = (line_width - len(headers) - 1) // len(headers)
-        prev_entry_width = entry_width
-        formatted_row = f'\r'
-        left_separator = f'{column_separator}'
-        right_separator = f'{column_separator}'
-
-        for (index, entry) in enumerate(row):
-            if index == len(headers) - 1:
-                entry_width = line_width - len(headers) - 1 - index * entry_width
-            # formatted_row += Colors.Bright_White + Decorators.Bold + BackgroundColors.Bright_Blue + entry_format.format(entry, entry_width) + Style.RESET + f'{column_separator}'
-
-            if index > 0:
-                left_separator = ''
-
-            justified_entry = justify(entry, entry_width, indent=occupied_line_width,
-                                      right_separator=right_separator, left_separator=left_separator)
-
-            occupied_line_width += entry_width + len(column_separator) * 2
-            formatted_row = Decorators.Bold + justified_entry + Style.RESET + formatted_row
-
-        formatted_rows += formatted_row + intermediate_row_separator
-
-    return formatted_title + row_separator + formatted_headers + intermediate_row_separator + formatted_rows
+    return table
