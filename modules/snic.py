@@ -14,7 +14,7 @@
 from utilities.formatter import justify, create_table, Colors, Style
 
 
-__line_width = 60
+__line_width = 40
 
 __snic_variables = {
     'name': ' '.join('SNIC'),

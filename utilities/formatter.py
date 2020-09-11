@@ -142,7 +142,7 @@ def create_row(data, line_width, header=False):
 
 
 def create_table(title, headers, rows, line_width=150, row_separator='-', column_separator='|'):
-    table = ''
+    table = Style.KEYWORD
     row_separator = '+' + f'{row_separator}' * (line_width - 2) + '+'
     table += row_separator
     table += '\n' + create_row(headers, line_width).strip() + '\n' + row_separator
@@ -150,4 +150,5 @@ def create_table(title, headers, rows, line_width=150, row_separator='-', column
         assert len(headers) == len(row), "Number of header and number of column in a row should be same."
         table += '\n' + create_row(row, line_width).strip() + '\n' + row_separator
 
+    table += Style.RESET
     return table
