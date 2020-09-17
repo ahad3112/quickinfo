@@ -14,7 +14,7 @@
 from utilities.formatter import justify, create_table, Colors, Style
 
 
-__line_width = 40
+__line_width = 160
 
 __snic_variables = {
     'name': ' '.join('SNIC'),
@@ -42,12 +42,12 @@ __snic_variables = {
                     '\n{3.RESET}{2[quickinfo]:<{1}}\n'
                     '\n{3.TITLE}{2[module_activate_title]}{3.RESET}'
                     '\n\t{2[activate]}\n'
-                    '\n{3.TITLE}{2[var_list_title]}{3.RESET}'
-                    '\n\t{3.KEYWORD}SNIC_BACKUP   : {3.RESET}{5[SNIC_BACKUP]:<{1}}'
-                    '\n\t{3.KEYWORD}SNIC_NOBACKUP : {3.RESET}{5[SNIC_NOBACKUP]:<{1}}'
-                    '\n\t{3.KEYWORD}SNIC_RESOURCE : {3.RESET}{5[SNIC_RESOURCE]:<{1}}'
-                    '\n\t{3.KEYWORD}SNIC_SITE     : {3.RESET}{5[SNIC_SITE]:<{1}}'
-                    '\n\t{3.KEYWORD}SNIC_TMP      : {3.RESET}{5[SNIC_TMP]:<{1}}\n'
+                    # '\n{3.TITLE}{2[var_list_title]}{3.RESET}'
+                    # '\n\t{3.KEYWORD}SNIC_BACKUP   : {3.RESET}{5[SNIC_BACKUP]:<{1}}'
+                    # '\n\t{3.KEYWORD}SNIC_NOBACKUP : {3.RESET}{5[SNIC_NOBACKUP]:<{1}}'
+                    # '\n\t{3.KEYWORD}SNIC_RESOURCE : {3.RESET}{5[SNIC_RESOURCE]:<{1}}'
+                    # '\n\t{3.KEYWORD}SNIC_SITE     : {3.RESET}{5[SNIC_SITE]:<{1}}'
+                    # '\n\t{3.KEYWORD}SNIC_TMP      : {3.RESET}{5[SNIC_TMP]:<{1}}\n'
                     '\n{6}'
                     '\n{3.TITLE}{2[var_value_title]}{3.RESET}'
                     '\n\t{2[echo_var]}\n'

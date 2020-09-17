@@ -62,12 +62,13 @@ class Decorators:
 
 class Style:
     HEADER = Colors.Bright_White + Decorators.Bold + BackgroundColors.Bright_Green
+    TABLE_TITLE = Colors.Bright_Red + Decorators.Bold + BackgroundColors.Bright_White
     TITLE = Colors.Bright_White + Decorators.Bold + Decorators.Underline
     KEYWORD = Colors.Bright_Red + Decorators.Bold
     RESET = '\u001b[0m'
 
 
-def justify(text, line_width, indent=0, left_separator='', right_separator=''):
+def justify(text, line_width, indent=0, left_separator='', right_separator='', align='<'):
     '''
     This function is responsible to justify alignment based on the line width
     '''
@@ -81,14 +82,17 @@ def justify(text, line_width, indent=0, left_separator='', right_separator=''):
                 # TODO: will deal with addind '-'' later
                 # result.append('\r' + ' ' * indent + left_separator + text[:line_width - 1] + '-' + right_separator + '\n')
                 # text = text[line_width - 1:]
-                result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
+                result.append(' ' * indent + left_separator + '{0:{1}{2}}'.format(text[:line_width], align, line_width)+ right_separator + '\n')
+                # result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
                 text = text[line_width:]
             else:
-                result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
+                result.append(' ' * indent + left_separator + '{0:{1}{2}}'.format(text[:line_width], align, line_width)+ right_separator + '\n')
+                # result.append(' ' * indent + left_separator + text[:line_width] + right_separator + '\n')
                 text = text[line_width:]
         except IndexError:
             rest_text = text[:]
-            result.append(' ' * indent + left_separator + rest_text + ' ' * (line_width - len(rest_text)) + right_separator)
+            result.append(' ' * indent + left_separator + '{0:{1}{2}}'.format(rest_text, align, line_width)+ right_separator)
+            # result.append(' ' * indent + left_separator + rest_text + ' ' * (line_width - len(rest_text)) + right_separator)
             text = ''
 
         text = text.lstrip()
@@ -104,7 +108,7 @@ def create_entry():
     pass
 
 
-def create_row(data, line_width, header=False):
+def create_row(data, line_width, header=False, align='<'):
     # we need place for cloumn separator and padding
     n_columns = len(data)
     total_columns_width = line_width - len(data) * 3 - 1
@@ -119,7 +123,7 @@ def create_row(data, line_width, header=False):
     offset = 0
 
     for (index, col) in enumerate(data):
-        justified_lines = justify(col, columns_width[index]).split('\n')
+        justified_lines = justify(col, columns_width[index], align=align).split('\n')
 
         assert lines_in_row >= len(justified_lines), 'Error in defining lines in a row'
 
@@ -134,16 +138,16 @@ def create_row(data, line_width, header=False):
     return ''.join(row)
 
 
-def create_table(title, headers, rows, line_width=150, row_separator='-', column_separator='|'):
+def create_table(title, headers, rows, line_width=150, row_sep='-', column_separator='|'):
     # Adding the tile of the table
-    table = Style.KEYWORD
-    table += '+{0}+\n| {1} |\n+{0}+\n'.format('-'*(len(title) + 2), title)
-    row_separator = '+' + f'{row_separator}' * (line_width - 2) + '+'
+    row_separator = '+' + f'{row_sep}' * (line_width - 2) + '+'
+    table = row_separator + '\n|' + Style.TABLE_TITLE + '{0:^{1}}'.format(title, line_width-2) + Style.RESET + '|\n'
+    table += Decorators.Bold
     table += row_separator
-    table += '\n' + create_row(headers, line_width).strip() + '\n' + row_separator
+    table += '\n' + create_row(headers, line_width, align='^').strip() + '\n' + row_separator
     for row in rows:
         assert len(headers) == len(row), "Number of header and number of column in a row should be same."
         table += '\n' + create_row(row, line_width).strip() + '\n' + row_separator
 
-    table += Style.RESET
+    # table += Style.RESET
     return table
