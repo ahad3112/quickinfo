@@ -32,13 +32,6 @@ class Colors:
     Bright_Cyan = '\u001b[36;1m'
     Bright_White = '\u001b[37;1m'
 
-    # Some Predefined colors to be used in some specific context
-    # HEADER = '\033[95m'
-    # OKBLUE = '\033[94m'
-    # OKGREEN = '\033[92m'
-    # WARNING = '\033[93m'
-    # FAIL = '\033[91m'
-    # ENDC = '\033[0m'
 
 
 class BackgroundColors:
@@ -142,7 +135,9 @@ def create_row(data, line_width, header=False):
 
 
 def create_table(title, headers, rows, line_width=150, row_separator='-', column_separator='|'):
+    # Adding the tile of the table
     table = Style.KEYWORD
+    table += '+{0}+\n| {1} |\n+{0}+\n'.format('-'*(len(title) + 2), title)
     row_separator = '+' + f'{row_separator}' * (line_width - 2) + '+'
     table += row_separator
     table += '\n' + create_row(headers, line_width).strip() + '\n' + row_separator
